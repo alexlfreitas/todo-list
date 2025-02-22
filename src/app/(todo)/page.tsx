@@ -10,82 +10,37 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { ClipboardList, Plus, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Dancing_Script as DancingScript } from 'next/font/google'
-import { useState } from 'react'
+import { todoSchema, defaultValues, Todo } from './schema'
+import { useTaskStore } from './store'
 
 const dancingScript = DancingScript({
   subsets: ['latin'],
   weight: '700',
 })
 
-type Task = {
-  id: string
-  title: string
-  completed: boolean
-}
-
-const todoSchema = z.object({
-  title: z.string().min(3, {
-    message: 'Insira uma tarefa com no mínimo 3 caracteres',
-  }),
-})
-
-const defaultValues = {
-  title: '',
-}
-
 export default function Home() {
-  const [taskList, setTaskList] = useState<Task[]>()
+  const { tasks, addTask, removeTask, toggleTask, resetTasks } = useTaskStore()
 
   const {
     register,
     reset,
     formState: { errors },
     handleSubmit,
-  } = useForm<z.infer<typeof todoSchema>>({
+  } = useForm<Todo>({
     resolver: zodResolver(todoSchema),
     defaultValues,
   })
 
   const formSubmit = handleSubmit((data) => {
-    setTaskList((prev) => [
-      ...(prev || []),
-      {
-        id: Math.random().toString(36),
-        title: data.title,
-        completed: false,
-      },
-    ])
-
+    addTask(data.title)
     reset()
   })
 
-  const finishedTasks = taskList?.filter((todo) => todo.completed === true)
-
-  const deleteTask = (id: string) => {
-    setTaskList((prev) => prev?.filter((task) => task.id !== id))
-  }
-
-  const deleteAllTasks = () => {
-    setTaskList([])
-  }
-
-  const completeTask = (id: string) => {
-    setTaskList((prev) =>
-      prev?.map((task) => {
-        if (task.id === id) {
-          return {
-            ...task,
-            completed: !task.completed,
-          }
-        }
-        return task
-      }),
-    )
-  }
+  const finishedTasks = tasks?.filter((todo) => todo.completed === true)
 
   return (
     <div className="flex flex-col min-h-screen w-full items-center justify-center bg-gradient-to-b bg-gray-300">
@@ -116,12 +71,11 @@ export default function Home() {
           )}
         </form>
 
-        {taskList?.length ? (
+        {tasks?.length ? (
           <>
             <div className="flex gap-2 items-center justify-between py-6 font-semibold">
               <div className="text-violet-700">
-                Tarefas{' '}
-                <Badge className="bg-violet-700">{taskList?.length}</Badge>
+                Tarefas <Badge className="bg-violet-700">{tasks?.length}</Badge>
               </div>
               <div className="text-blue-600">
                 Concluídas{' '}
@@ -132,7 +86,7 @@ export default function Home() {
             <Separator />
 
             <div className="py-4 flex flex-1 flex-col gap-2 text-gray-700">
-              {taskList?.map((task) => (
+              {tasks?.map((task) => (
                 <Card
                   key={task.id}
                   className="w-full p-2 pl-4 flex items-center gap-3"
@@ -141,7 +95,7 @@ export default function Home() {
                     <Label className="flex items-center gap-2 cursor-pointer font-normal">
                       <Checkbox
                         className="flex-shrink-0 w-5 h-5 border-gray-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                        onCheckedChange={() => completeTask(task.id)}
+                        onCheckedChange={() => toggleTask(task.id)}
                       />
                       <span
                         className={
@@ -156,7 +110,7 @@ export default function Home() {
                     variant="ghost"
                     size="sm"
                     className="flex-shrink-0"
-                    onClick={() => deleteTask(task.id)}
+                    onClick={() => removeTask(task.id)}
                   >
                     <Trash2 className="text-destructive" />
                   </Button>
@@ -166,7 +120,7 @@ export default function Home() {
 
             <Separator />
 
-            <Button size={'lg'} className="mt-4" onClick={deleteAllTasks}>
+            <Button size={'lg'} className="mt-4" onClick={resetTasks}>
               <Trash2 className="mr-1" />
               Limpar lista
             </Button>

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Task } from './types'
+import { Task } from '../types/task'
 
 type TaskStore = {
   tasks: Task[]

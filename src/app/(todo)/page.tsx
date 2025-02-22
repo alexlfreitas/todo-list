@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Dancing_Script as DancingScript } from 'next/font/google'
 import { todoSchema, defaultValues, Todo } from './schema'
-import { useTaskStore } from './store'
+import { useTaskStore } from '../../store/task-store'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 
 const dancingScript = DancingScript({
@@ -97,6 +97,7 @@ export default function Home() {
                       <Checkbox
                         className="flex-shrink-0 w-5 h-5 border-gray-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                         onCheckedChange={() => toggleTask(task.id)}
+                        checked={task.completed}
                       />
                       <span
                         className={

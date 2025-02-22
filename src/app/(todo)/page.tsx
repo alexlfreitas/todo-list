@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Dancing_Script as DancingScript } from 'next/font/google'
 import { todoSchema, defaultValues, Todo } from './schema'
 import { useTaskStore } from './store'
+import { ConfirmDialog } from '@/components/confirm-dialog'
 
 const dancingScript = DancingScript({
   subsets: ['latin'],
@@ -106,24 +107,31 @@ export default function Home() {
                       </span>
                     </Label>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex-shrink-0"
-                    onClick={() => removeTask(task.id)}
+                  <ConfirmDialog
+                    title="Remover tarefa?"
+                    description="Ao confirmar, a tarefa será removida da lista"
+                    onConfirm={() => removeTask(task.id)}
                   >
-                    <Trash2 className="text-destructive" />
-                  </Button>
+                    <Button variant="ghost" size="sm" className="flex-shrink-0">
+                      <Trash2 className="text-destructive" />
+                    </Button>
+                  </ConfirmDialog>
                 </Card>
               ))}
             </div>
 
             <Separator />
 
-            <Button size={'lg'} className="mt-4" onClick={resetTasks}>
-              <Trash2 className="mr-1" />
-              Limpar lista
-            </Button>
+            <ConfirmDialog
+              title="Limpar lista?"
+              description="Ao confirmar, todas as tarefas serão removidas"
+              onConfirm={resetTasks}
+            >
+              <Button size={'lg'} className="mt-4">
+                <Trash2 className="mr-1" />
+                Limpar lista
+              </Button>
+            </ConfirmDialog>
           </>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center text-gray-700">

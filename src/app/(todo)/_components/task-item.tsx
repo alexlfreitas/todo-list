@@ -17,7 +17,7 @@ export const TaskItem = ({ task }: TaskItemProps) => {
   const { removeTask, toggleTask } = useTaskStore()
 
   return (
-    <Card className="w-full p-2 pl-4 flex items-center gap-3">
+    <Card className="w-full p-2 pl-4 flex items-center gap-3 dark:bg-gray-900">
       <div className="flex items-center flex-1">
         <Label className="flex items-center gap-2 cursor-pointer font-normal">
           <Checkbox
@@ -36,7 +36,7 @@ export const TaskItem = ({ task }: TaskItemProps) => {
         onConfirm={() => removeTask(task.id)}
       >
         <Button variant="ghost" size="sm" className="flex-shrink-0">
-          <Trash2 className="text-destructive" />
+          <Trash2 className="text-destructive dark:text-gray-600" />
         </Button>
       </ConfirmDialog>
     </Card>

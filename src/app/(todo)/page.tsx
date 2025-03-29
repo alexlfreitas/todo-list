@@ -49,7 +49,7 @@ export default function Home() {
       <div className="flex flex-col min-h-screen w-full items-center justify-center bg-gradient-to-b bg-gray-300 dark:bg-background">
         <div
           className={cn(
-            'text-center w-full text-4xl text-white pt-[6vh] pb-[14vh] -mb-[8vh] bg-gradient-to-b from-violet-950 to-violet-700 dark:bg-none dark:bg-slate-900 dark:text-violet-400',
+            'text-center w-full text-4xl text-white pt-[6vh] pb-[14vh] -mb-[8vh] bg-gradient-to-b from-indigo-900 to-indigo-800 dark:bg-none dark:bg-slate-900 dark:text-violet-400',
             dancingScript.className,
           )}
         >
